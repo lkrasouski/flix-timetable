@@ -1,0 +1,17 @@
+# Gradle / Kotlin
+.gradle/
+build/
+**/build/
+.kotlin/
+local.properties
+*.iml
+.idea/
+*.hprof
+captures/
+
+# OS
+.DS_Store
+
+# Secrets
+*.jks
+*.keystore
