@@ -31,7 +31,7 @@ class DeparturesMapperTest {
     }
 
     @Test
-    fun `keeps complete rides only, without duplicates, sorted by departure time`() {
+    fun `keeps complete rides only without duplicates sorted by departure time`() {
         val departures = mapFixture().departures
 
         assertEquals(listOf("N958", "N3217", "N160"), departures.map { it.lineCode })
@@ -39,7 +39,7 @@ class DeparturesMapperTest {
     }
 
     @Test
-    fun `maps line code and direction, blank direction becomes null`() {
+    fun `maps line code and direction while blank direction becomes null`() {
         val departures = mapFixture().departures
 
         assertEquals("Rijeka bus station", departures[0].direction)

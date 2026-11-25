@@ -58,7 +58,12 @@ class TimetableViewModelTest {
             vm.state.test {
                 assertEquals(TimetableUiState.Loading, awaitItem())
                 val loaded = assertIs<TimetableUiState.Loaded>(awaitItem())
-                assertEquals(1, loaded.sections.single().items.size)
+                assertEquals(
+                    1,
+                    loaded.sections
+                        .single()
+                        .items.size,
+                )
             }
             assertEquals(start to start + 2.hours, repository.requests.single())
         }

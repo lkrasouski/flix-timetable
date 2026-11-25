@@ -27,18 +27,40 @@ class TimetableUiMapperTest {
 
     @Test
     fun `times are converted to the station time zone in winter`() {
-        val state = Timetable(berlin, listOf(departure("1", "2026-11-25T15:20:00Z"))).toUiState(now("2026-11-25T15:00:00Z"))
+        val state =
+            Timetable(
+                berlin,
+                listOf(departure("1", "2026-11-25T15:20:00Z")),
+            ).toUiState(now("2026-11-25T15:00:00Z"))
 
-        assertEquals(LocalTime(16, 20), state.sections.single().items.single().scheduledTime)
+        assertEquals(
+            LocalTime(16, 20),
+            state.sections
+                .single()
+                .items
+                .single()
+                .scheduledTime,
+        )
         assertEquals("UTC+01:00", state.station.utcOffset)
         assertEquals("Europe/Berlin", state.station.timeZoneId)
     }
 
     @Test
     fun `times are converted to the station time zone in summer`() {
-        val state = Timetable(berlin, listOf(departure("1", "2026-07-01T10:00:00Z"))).toUiState(now("2026-07-01T09:30:00Z"))
+        val state =
+            Timetable(
+                berlin,
+                listOf(departure("1", "2026-07-01T10:00:00Z")),
+            ).toUiState(now("2026-07-01T09:30:00Z"))
 
-        assertEquals(LocalTime(12, 0), state.sections.single().items.single().scheduledTime)
+        assertEquals(
+            LocalTime(12, 0),
+            state.sections
+                .single()
+                .items
+                .single()
+                .scheduledTime,
+        )
         assertEquals("UTC+02:00", state.station.utcOffset)
     }
 
@@ -47,7 +69,12 @@ class TimetableUiMapperTest {
         // 2026-10-25 03:00 CEST -> 02:00 CET
         val rides = listOf(departure("1", "2026-10-25T00:30:00Z"), departure("2", "2026-10-25T01:30:00Z"))
 
-        val items = Timetable(berlin, rides).toUiState(now("2026-10-25T00:00:00Z")).sections.single().items
+        val items =
+            Timetable(berlin, rides)
+                .toUiState(now("2026-10-25T00:00:00Z"))
+                .sections
+                .single()
+                .items
 
         assertEquals(listOf(LocalTime(2, 30), LocalTime(2, 30)), items.map { it.scheduledTime })
     }
@@ -61,25 +88,40 @@ class TimetableUiMapperTest {
         assertTrue(state.showDayHeaders)
         assertEquals(listOf(RelativeDay.TODAY, RelativeDay.TOMORROW), state.sections.map { it.day })
         assertEquals(LocalDate(2026, 11, 26), state.sections[1].date)
-        assertEquals(LocalTime(0, 10), state.sections[1].items.single().scheduledTime)
+        assertEquals(
+            LocalTime(0, 10),
+            state.sections[1]
+                .items
+                .single()
+                .scheduledTime,
+        )
     }
 
     @Test
     fun `same-day window hides day headers`() {
-        val state = Timetable(berlin, listOf(departure("1", "2026-11-25T15:20:00Z"))).toUiState(now("2026-11-25T15:00:00Z"))
+        val state =
+            Timetable(
+                berlin,
+                listOf(departure("1", "2026-11-25T15:20:00Z")),
+            ).toUiState(now("2026-11-25T15:00:00Z"))
 
         assertFalse(state.showDayHeaders)
     }
 
     @Test
-    fun `delay is shown from one minute on, in station time`() {
+    fun `delay is shown from one minute on in station time`() {
         val late =
             Realtime(Instant.parse("2026-11-25T16:47:00Z"), deviation = 1620.seconds, punctuality = Punctuality.LATE)
         val tiny =
             Realtime(Instant.parse("2026-11-25T16:00:40Z"), deviation = 40.seconds, punctuality = Punctuality.ON_TIME)
         val rides = listOf(departure("1", "2026-11-25T16:20:00Z", late), departure("2", "2026-11-25T16:00:00Z", tiny))
 
-        val items = Timetable(berlin, rides).toUiState(now("2026-11-25T15:00:00Z")).sections.single().items
+        val items =
+            Timetable(berlin, rides)
+                .toUiState(now("2026-11-25T15:00:00Z"))
+                .sections
+                .single()
+                .items
 
         assertEquals(DelayInfo(LocalTime(17, 47), minutes = 27, isLate = true), items[0].delay)
         assertNull(items[1].delay)

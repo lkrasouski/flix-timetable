@@ -56,7 +56,11 @@ internal class DeparturesMapper(
 
     private fun mapRide(dto: RideDto): Departure? {
         val id = dto.id?.takeIf { it.isNotBlank() }
-        val lineCode = dto.line?.code?.trim()?.takeIf { it.isNotEmpty() }
+        val lineCode =
+            dto.line
+                ?.code
+                ?.trim()
+                ?.takeIf { it.isNotEmpty() }
         val scheduledAt = dto.status?.scheduledTimestamp?.parseInstantOrNull()
         if (id == null || lineCode == null || scheduledAt == null) {
             logger.w { "Skipping incomplete ride id=${dto.id} line=${dto.line?.code}" }
@@ -65,7 +69,10 @@ internal class DeparturesMapper(
         return Departure(
             id = id,
             lineCode = lineCode,
-            direction = dto.line.direction?.trim()?.takeIf { it.isNotEmpty() },
+            direction =
+                dto.line.direction
+                    ?.trim()
+                    ?.takeIf { it.isNotEmpty() },
             scheduledAt = scheduledAt,
             realtime = dto.status.deviation?.let { mapRealtime(it, scheduledAt) },
         )

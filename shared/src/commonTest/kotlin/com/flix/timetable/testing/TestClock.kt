@@ -1,5 +1,6 @@
 package com.flix.timetable.testing
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
@@ -10,6 +11,7 @@ internal class TestClock(
     private val start: Instant,
     private val scheduler: TestCoroutineScheduler,
 ) : Clock {
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun now(): Instant = start + scheduler.currentTime.milliseconds
 }
 
